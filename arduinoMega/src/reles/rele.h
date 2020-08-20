@@ -2,7 +2,7 @@
 #define leds_h
 
 #include <Arduino.h>
-#include "pins.h"
+#include "../pins/pins.h"
 
 class rele : public digitalPin { //Defined
         private:

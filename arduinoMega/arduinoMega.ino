@@ -1,6 +1,5 @@
 //Librerias
 
-
     #include <Arduino.h>
     #include <IPAddress.h>
 
@@ -13,8 +12,8 @@
     #include <TimeLib.h>
     #include <TimeAlarms.h>
 
-    #include <leds.h>
-    #include <rele.h>
+    #include "src/leds/leds.h"
+    #include "src/reles/rele.h"
 
 
 //Serial--------------------------------------------------------
@@ -483,8 +482,6 @@ ntp hora;
 //Procesar mensaje
 
     int procesarMensaje(String msg, String from, IPAddress ip){
-        Serial.println();
-        Serial.println();
         Serial.println("Mensaje recibido: ");
         Serial.println(msg);
         //Serial.print("  Desde: ");
@@ -513,8 +510,8 @@ ntp hora;
         //Redireccion
 
             if (seccion[0].toInt() != 0){
-                    Serial.println("Redireccion");
-                    return 2;
+                Serial.println("Redireccion");
+                return 2;
             }
 
         //Acciones
@@ -543,8 +540,12 @@ void setup() {
     Serial.println("Iniciando");
     Serial.println();
 
-    //0;admin;led;new;2;2;3;|
-    //0;admin;led;setTarget;0;2;255;255;|
+    //0;admin;led;new;3;2;3;4;|
+    //0;admin;led;new;1;2;|
+    //0;admin;led;new;1;3;|
+    //0;admin;led;setTarget;0;1;200;|
+    //0;admin;led;setTarget;1;1;50;|
+    //0;admin;led;setTarget;0;3;255;255;|
     //0;admin;led;setBright;0;255;|
     //0;admin;led;getValue;0;|
 
@@ -638,23 +639,20 @@ void setup() {
 
     Serial.print("Tiempo: ");
     Serial.println(millis());
-    Serial.println();
+    Serial.println("INICIADO");
+    procesarMensaje("0;admin;led;new;1;2;|", "Serial", 0);
+    procesarMensaje("0;admin;led;setTarget;0;1;199;|", "Serial", 0);
+    procesarMensaje("0;admin;led;new;1;3;|", "Serial", 0);
+    procesarMensaje("0;admin;led;setTarget;1;1;50;|", "Serial", 0);
 
 }
 
 void loop() {
-
-
-
     net.serverCheckReceived();
     net.udpCheckReceived();
     serialCheckReceived();
 
-    //tirauno.check(); //Loop LED
-
     adminLed.checkLeds();
 
     Alarm.delay(0);
-
-
 }

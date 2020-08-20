@@ -2,15 +2,15 @@
 #define pins_h
 
 class digitalPin {
-        protected:
-            short int pin;
-            bool state;
-        public:
-            digitalPin(int p, bool s = false); //pin, defaultState
-            void toggle();
-            void on();
-            void off();
-            bool getState();
+    protected:
+        short int pin;
+        bool state;
+    public:
+        digitalPin(int p, bool s = false); //pin, defaultState
+        void toggle();
+        void on();
+        void off();
+        bool getState();
 };
 
 class analogPin {

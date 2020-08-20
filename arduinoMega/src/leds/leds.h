@@ -2,7 +2,7 @@
 #define leds_h
 
 #include <Arduino.h>
-#include "pins.h"
+#include "../pins/pins.h"
 
 
 class analogDiode : public analogPin { //Defined
@@ -36,13 +36,13 @@ class digitalRGB { //Defined
         void exist();
 };
 
-class analogRGB{ //Definido
+class analogStrip{ //Definido
     private:
         int nDiodes = 0; //cantidad de diodos;
         analogDiode **diodes;
 
         bool state = true;
-        unsigned long ms = 500;
+        unsigned long ms = 1000;
         unsigned long msNext;
         unsigned long msInterval;
 
@@ -50,11 +50,11 @@ class analogRGB{ //Definido
 
         short int valueBright = 255;
 
-        int calBright(int n);
-        void calDif();
+        int calBright(int n); //pondera el voltaje segun brillo y rgb
+        void calDif(); //calcula los ms de cambio
 
     public:
-        analogRGB(int t, int p[]);
+        analogStrip(int t, int p[]);
 
         void setTarget(int v[]);
         void setBright(int b);
@@ -68,12 +68,13 @@ class analogRGB{ //Definido
 
 class admLed{ //Plug 'n' Play
     private:
-        analogRGB **ledsRGB;
-        int nLedsRGB;
+        analogStrip **strips;
+        int nStrips;
     public:
         admLed();
         int newLed(int t, int p[]);
         void getValue(int id);
+        void dg();
 
         void setTarget(int id, int v[]);
         int setBright(int id, int b);
