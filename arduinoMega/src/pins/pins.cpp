@@ -17,6 +17,10 @@
         return value;
     }
 
+    short int analogPin::getPin(){
+        return pin;
+    }
+
 //digitalPin
 
     digitalPin::digitalPin(int p, bool s = false){
@@ -47,4 +51,8 @@
     bool digitalPin::getState(){
 
         return state;
+    }
+
+    short int digitalPin::getPin(){
+        return pin;
     }

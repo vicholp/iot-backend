@@ -482,13 +482,12 @@ ntp hora;
 //Procesar mensaje
 
     int procesarMensaje(String msg, String from, IPAddress ip){
-        Serial.println("Mensaje recibido: ");
+        Serial.print("-> ");
         Serial.println(msg);
         //Serial.print("  Desde: ");
         //Serial.print(from);
         //Serial.print("  Por: ");
         //Serial.println(ip);
-        Serial.println();
 
         //Procesado
             char separador = ";"; //Variables iniciales
@@ -539,15 +538,6 @@ void setup() {
 
     Serial.println("Iniciando");
     Serial.println();
-
-    //0;admin;led;new;3;2;3;4;|
-    //0;admin;led;new;1;2;|
-    //0;admin;led;new;1;3;|
-    //0;admin;led;setTarget;0;1;200;|
-    //0;admin;led;setTarget;1;1;50;|
-    //0;admin;led;setTarget;0;3;255;255;|
-    //0;admin;led;setBright;0;255;|
-    //0;admin;led;getValue;0;|
 
     bool internet = false;
     bool udp = false;
@@ -637,13 +627,15 @@ void setup() {
         }
     }
 
-    Serial.print("Tiempo: ");
-    Serial.println(millis());
-    Serial.println("INICIADO");
+
+    Serial.print("INICIADO ( ");
+    Serial.print(millis()/1000);
+    Serial.println(")");
     procesarMensaje("0;admin;led;new;1;2;|", "Serial", 0);
     procesarMensaje("0;admin;led;setTarget;0;1;199;|", "Serial", 0);
     procesarMensaje("0;admin;led;new;1;3;|", "Serial", 0);
     procesarMensaje("0;admin;led;setTarget;1;1;50;|", "Serial", 0);
+    procesarMensaje("0;admin;led;debug;|", "Serial", 0);
 
 }
 

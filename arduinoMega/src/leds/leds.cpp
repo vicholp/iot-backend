@@ -109,10 +109,13 @@
         return (int)lrint(n*(float)valueBright/255.0);
     }
 
-    void analogStrip::debug(){
+    void analogStrip::printState(){
         for (int i = 0; i < nDiodes; ++i){
+            Serial.print("  ");
+            Serial.print(diodes[i]->getPin());
+            Serial.print(" -> ");
             Serial.print(diodes[i]->getValue());
-            Serial.print(" - ");
+            Serial.println("");
         }
     }
 
@@ -129,24 +132,22 @@
 
         strips[nStrips-1] = new analogStrip(t, p);
 
-        return nStrips;
+        return nStrips-1;
     }
 
     void admLed::getValue(int id){
         
-        strips[id]->debug();
     }
     void admLed::setTarget(int id, int v[]){
         strips[id]->setTarget(v);
     }
 
     void admLed::dg(){
-        Serial.print("ADM LED DEBUG: ");
+        Serial.println("ADM LED DEBUG: ");
         for (int i = 0; i < nStrips; ++i){
-            Serial.print(i+1);
-            Serial.print(": ");
-            strips[i]->debug();
-            Serial.println();
+            Serial.print("STRIP:  ");
+            Serial.println(i+1);
+            strips[i]->printState();
         }
         
         
@@ -183,7 +184,9 @@
                 for (int i = 0; i < leds; ++i){
                     v[i] = seccion[5+i].toInt();
                 }
-                return newLed(leds, v);
+                Serial.print("ID -> ");
+                Serial.println(newLed(leds, v));
+                return 1;
             }
 
             if(seccion[3] == "setTarget"){
@@ -193,22 +196,16 @@
                     v[i] = seccion[6+i].toInt();
                 }
                 setTarget(id,v);
+                Serial.println("SET");
                 return 1;
             }
 
             if(seccion[3] == "setBright"){
                 int b = seccion[5].toInt();
                 setBright(id, b);
-
+                Serial.println("SET");
                 return 1;
-            }
-
-            if(seccion[3] == "getValue"){
-                getValue(id);
-
-                return 1;
-            }
-            
+            }            
 
             Serial.print(seccion[3]);
             Serial.println(" NOT DEFINED");

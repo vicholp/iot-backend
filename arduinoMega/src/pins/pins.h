@@ -11,6 +11,7 @@ class digitalPin {
         void on();
         void off();
         bool getState();
+        short int getPin();
 };
 
 class analogPin {
@@ -22,6 +23,7 @@ class analogPin {
         analogPin(int p, int v = 0);
         short int getValue();
         void setValue(int v);
+        short int getPin();
 };
 
 

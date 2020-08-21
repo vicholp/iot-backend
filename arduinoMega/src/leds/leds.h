@@ -16,33 +16,13 @@ class analogDiode : public analogPin { //Defined
         bool refresh();
 };
 
-class digitalRGB { //Defined
-    private:
-        short int type;
-
-        short int nDiodes; //cantidad de diodos;
-        digitalPin **diodes;
-
-
-        analogPin *brightPin; //pin para setear brillo.
-    public:
-        digitalRGB(int t, int p[], int b = 0); //con pin brillo
-
-        void setTarget(bool v[], int b=100); //?????
-        void setBright(int b); //?????
-
-        //void check();
-        //void debug();
-        void exist();
-};
-
 class analogStrip{ //Definido
     private:
         int nDiodes = 0; //cantidad de diodos;
         analogDiode **diodes;
 
         bool state = true;
-        unsigned long ms = 1000;
+        unsigned long ms = 2000;
         unsigned long msNext;
         unsigned long msInterval;
 
@@ -60,10 +40,9 @@ class analogStrip{ //Definido
         void setBright(int b);
         void setMS(unsigned long n);
 
-
         void check();
-        void debug();
-        void exist();
+        void printState();
+
 };
 
 class admLed{ //Plug 'n' Play
