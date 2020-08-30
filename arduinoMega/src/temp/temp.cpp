@@ -3,7 +3,7 @@
 #include "temp.h"
 
 float sensorTemp::convert(int v){
-	return (v / 1023.0) * 500.0;
+	return ((v / 1023.0) * 500.0);
 }
 
 float sensorTemp::getValue(){
