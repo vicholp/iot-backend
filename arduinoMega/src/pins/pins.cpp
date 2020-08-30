@@ -24,7 +24,6 @@
 //analogPinIn
 
     analogPinIn::analogPinIn(int p){
-        pinMode(p, INPUT);
         pin = p;
     }
     int analogPinIn::getValue(){
