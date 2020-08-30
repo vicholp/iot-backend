@@ -14,6 +14,7 @@
 
     #include "src/leds/leds.h"
     #include "src/reles/rele.h"
+    #include "src/temp/temp.h"
 
 
 //Serial--------------------------------------------------------
@@ -477,20 +478,21 @@
 
 admLed adminLed;
 
+sensorTemp temp(A0);
+
 ntp hora;
 
 //Procesar mensaje
 
     int procesarMensaje(String msg, String from, IPAddress ip){
-        Serial.print("-> ");
-        Serial.println(msg);
+        
         //Serial.print("  Desde: ");
         //Serial.print(from);
         //Serial.print("  Por: ");
         //Serial.println(ip);
 
         //Procesado
-            char separador = ";"; //Variables iniciales
+            const char separador = ';'; //Variables iniciales
             char *ptr;
             int i = 0;
             char frase[500];
@@ -498,10 +500,10 @@ ntp hora;
 
             msg.toCharArray(frase, 200); //Se acomoda el String
 
-            ptr = strtok( frase, ";" ); //Primer token
+            ptr = strtok( frase, "/"); //Primer token
             seccion[i] = ptr;
             i++;
-            while((ptr = strtok( NULL, ";" )) != NULL ){ //Posteriores tokens
+            while((ptr = strtok( NULL, "/" )) != NULL ){ //Posteriores tokens
                 seccion[i] = ptr;
                 i++;
             } //Salida es String seccion[i], sin el ";"
@@ -511,19 +513,30 @@ ntp hora;
             if (seccion[0].toInt() != 0){
                 Serial.println("Redireccion");
                 return 2;
-            }
-
-        //Acciones
-
-            if(seccion[1] == "ready"){
+                
+            }else if(seccion[1] == "ready"){
                 Serial.println("yes");
                 return 1;
+
+            }else if(seccion[1] == "admin"){
+                return adminLed.input(seccion);
+
+            }else if(seccion[1] == "getTemp"){
+                Serial.println(temp.getValue());
+                return 1;
+
+            }else if(seccion[1] == "getRaw"){
+                Serial.println(temp.getRaw());
+                return 1;
+
             }
+            else if(seccion[1] == "getPin"){
+                Serial.println(temp.getPin());
+                return 1;
 
-            if(seccion[1] == "admin"){
-                adminLed.input(seccion);
-
-           }
+            }else{
+                Serial.println(msg);
+            }
         return "1";
     }
 
@@ -631,11 +644,15 @@ void setup() {
     Serial.print("INICIADO ( ");
     Serial.print(millis()/1000);
     Serial.println(")");
-    procesarMensaje("0;admin;led;new;1;2;|", "Serial", 0);
-    procesarMensaje("0;admin;led;setTarget;0;1;199;|", "Serial", 0);
-    procesarMensaje("0;admin;led;new;1;3;|", "Serial", 0);
-    procesarMensaje("0;admin;led;setTarget;1;1;50;|", "Serial", 0);
-    procesarMensaje("0;admin;led;debug;|", "Serial", 0);
+    procesarMensaje("0/admin/led/new/1/2/|", "Serial", 0);
+    procesarMensaje("0/admin/led/setTarget/0/1/200/|", "Serial", 0);
+    //0/admin/led/setTarget/0/1/50/;
+    procesarMensaje("0/admin/led/new/1/3/|", "Serial", 0);
+    procesarMensaje("0/admin/led/setTarget/1/1/200/|", "Serial", 0);
+    procesarMensaje("0/admin/led/debug/|", "Serial", 0);
+
+    
+
 
 }
 

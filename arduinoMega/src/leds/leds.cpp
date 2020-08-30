@@ -209,6 +209,7 @@
 
             Serial.print(seccion[3]);
             Serial.println(" NOT DEFINED");
+            return 0;
         }
         
 

@@ -26,5 +26,15 @@ class analogPin {
         short int getPin();
 };
 
+class analogPinIn {
+    protected:
+        int pin = 0;
+
+    public:
+        analogPinIn(int p);
+        int getValue();
+        int getPin();
+};
+
 
 #endif

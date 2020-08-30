@@ -21,6 +21,19 @@
         return pin;
     }
 
+//analogPinIn
+
+    analogPinIn::analogPinIn(int p){
+        pinMode(p, INPUT);
+        pin = p;
+    }
+    int analogPinIn::getValue(){
+        return analogRead(pin);
+    }
+    int analogPinIn::getPin(){
+        return pin;
+    }
+
 //digitalPin
 
     digitalPin::digitalPin(int p, bool s = false){
