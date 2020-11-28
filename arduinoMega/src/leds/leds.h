@@ -1,4 +1,4 @@
-#ifndef leds_h
+    #ifndef leds_h
 #define leds_h
 
 #include <Arduino.h>
@@ -22,9 +22,9 @@ class analogStrip{ //Definido
         analogDiode **diodes;
 
         bool state = true;
-        unsigned long ms = 2000;
-        unsigned long msNext;
-        unsigned long msInterval;
+        unsigned long ms = 1000;
+        unsigned long msNext = 0;
+        unsigned long msInterval = 0;
 
         bool changing = false;
 
@@ -40,6 +40,10 @@ class analogStrip{ //Definido
         void setBright(int b);
         void setMS(unsigned long n);
 
+        void getValues();
+        void getMS();
+        void getBright();
+
         void check();
         void printState();
 
@@ -52,12 +56,14 @@ class admLed{ //Plug 'n' Play
     public:
         admLed();
         int newLed(int t, int p[]);
-        void getValue(int id);
+        void getValues(int id);
+        void getMS(int id);
+        void getBright(int id);
         void dg();
 
         void setTarget(int id, int v[]);
-        int setBright(int id, int b);
-        void setMs(int id, int ms);
+        void setBright(int id, int b);
+        void setMS(int id, int ms);
 
         int input(String seccion[]);
         void checkLeds();

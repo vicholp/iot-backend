@@ -37,10 +37,6 @@
             diodes[i] = new analogDiode(p[i], 0);
         }
 
-        ms, msNext, msInterval = 500,0,500;
-        state = true;
-        changing = false;
-
     }
 
     void analogStrip::setTarget(int v[]){
@@ -62,14 +58,19 @@
         for (int i = 0; i < nDiodes; ++i){ //por cada diodo
             int d = diodes[i]->getTarget()-diodes[i]->getValue();
             if (d != 0){
-                minimum = min(minimum, abs(lrint( ms/(d) )));
+                minimum = min(minimum, abs(lrint( ms/abs(d) )));
                 dif = true;
             }
 
         }
         if (dif){
             msInterval = minimum;
-
+            if(msInterval == 0){
+                for (int i = 0; i < nDiodes; ++i){ //por cada diodo
+                    diodes[i]->setValue(diodes[i]->getTarget());
+                }
+                return;
+            }
             msNext = millis() + msInterval;
             changing = true;
         }
@@ -90,7 +91,6 @@
     }
 
     void analogStrip::setMS(unsigned long m){
-
         ms = m;
     }
 
@@ -119,6 +119,20 @@
         }
     }
 
+    void analogStrip::getValues(){
+        for (int i = 0; i < nDiodes; ++i){
+            Serial.print(diodes[i]->getValue());
+            if(i != nDiodes-1) Serial.print(',');
+        }
+    }
+
+    void analogStrip::getBright(){
+        Serial.print(valueBright);
+    }
+    void analogStrip::getMS(){
+        Serial.print(ms);
+    }
+
 //Pnp
 
     admLed::admLed(){
@@ -135,8 +149,14 @@
         return nStrips-1;
     }
 
-    void admLed::getValue(int id){
-        
+    void admLed::getValues(int id){
+        strips[id]->getValues();
+    }
+    void admLed::getBright(int id){
+        strips[id]->getBright();
+    }
+    void admLed::getMS(int id){
+        strips[id]->getMS();
     }
     void admLed::setTarget(int id, int v[]){
         strips[id]->setTarget(v);
@@ -153,14 +173,12 @@
         
     }
 
-    int admLed::setBright(int id, int b){
+    void admLed::setBright(int id, int b){
         strips[id]->setBright(b);
-
-        return 1;
     }
 
-    void admLed::setMs(int id, int ms){
-
+    void admLed::setMS(int id, int ms){
+        strips[id]->setMS((unsigned long)ms);
     }
     void admLed::checkLeds(){
         for (int i = 0; i < nStrips; ++i){
@@ -173,10 +191,11 @@
                 return false;
             }
             int id = seccion[4].toInt();
+            Serial.print("[");
             if(seccion[3] == "debug"){
                 dg();
 
-                return 1;
+                
             }
             if(seccion[3] == "new"){
                 int leds = id;
@@ -184,9 +203,8 @@
                 for (int i = 0; i < leds; ++i){
                     v[i] = seccion[5+i].toInt();
                 }
-                Serial.print("ID -> ");
-                Serial.println(newLed(leds, v));
-                return 1;
+                Serial.print(newLed(leds, v));
+                
             }
 
             if(seccion[3] == "setTarget"){
@@ -196,20 +214,37 @@
                     v[i] = seccion[6+i].toInt();
                 }
                 setTarget(id,v);
-                Serial.println("SET");
-                return 1;
+                Serial.print("'OK'");
+                
             }
 
             if(seccion[3] == "setBright"){
                 int b = seccion[5].toInt();
                 setBright(id, b);
-                Serial.println("SET");
-                return 1;
-            }            
+                Serial.print("'OK'");
+                
+            }  
+            if(seccion[3] == "setMS"){
+                int b = seccion[5].toInt();
+                setMS(id, b);
+                Serial.print("'OK'");
+                
+            }  
 
-            Serial.print(seccion[3]);
-            Serial.println(" NOT DEFINED");
-            return 0;
+            if(seccion[3] == "getValue"){
+                getValues(id);
+                
+            }   
+            if(seccion[3] == "getBright"){
+                getBright(id);
+                
+            } 
+            if(seccion[3] == "getMS"){
+                getMS(id);
+                
+            }         
+            Serial.println("]");
+            return 1;
         }
         
 

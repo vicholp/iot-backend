@@ -13,7 +13,6 @@
         analogWrite(pin, v);
     }
     short int analogPin::getValue(){
-
         return value;
     }
 

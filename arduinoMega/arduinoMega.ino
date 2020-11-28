@@ -500,14 +500,14 @@ ntp hora;
 
             msg.toCharArray(frase, 200); //Se acomoda el String
 
-            ptr = strtok( frase, "/"); //Primer token
+            ptr = strtok( frase, "-"); //Primer token
             seccion[i] = ptr;
             i++;
-            while((ptr = strtok( NULL, "/" )) != NULL ){ //Posteriores tokens
+            while((ptr = strtok( NULL, "-" )) != NULL ){ //Posteriores tokens
                 seccion[i] = ptr;
                 i++;
             } //Salida es String seccion[i], sin el ";"
-
+            Serial.println(msg);
         //Redireccion
 
             if (seccion[0].toInt() != 0){
@@ -520,22 +520,6 @@ ntp hora;
 
             }else if(seccion[1] == "admin"){
                 return adminLed.input(seccion);
-
-            }else if(seccion[1] == "getTemp"){
-                Serial.println(temp.getValue());
-                return 1;
-
-            }else if(seccion[1] == "getRaw"){
-                Serial.println(temp.getRaw());
-                return 1;
-
-            }
-            else if(seccion[1] == "getPin"){
-                Serial.println(temp.getPin());
-                return 1;
-
-            }else{
-                Serial.println(msg);
             }
         return "1";
     }
@@ -641,18 +625,21 @@ void setup() {
     }
 
 
-    Serial.print("INICIADO ( ");
-    Serial.print(millis()/1000);
-    Serial.println(")");
-    procesarMensaje("0/admin/led/new/1/2/|", "Serial", 0);
-    procesarMensaje("0/admin/led/setTarget/0/1/200/|", "Serial", 0);
-    //0/admin/led/setTarget/0/1/50/;
-    procesarMensaje("0/admin/led/new/1/3/|", "Serial", 0);
-    procesarMensaje("0/admin/led/setTarget/1/1/200/|", "Serial", 0);
-    procesarMensaje("0/admin/led/debug/|", "Serial", 0);
+    
+    procesarMensaje("0-admin-led-new-1-2|", "Serial", 0);
+    procesarMensaje("0-admin-led-new-1-3|", "Serial", 0);
+    procesarMensaje("0-admin-led-new-3-4-5-6|", "Serial", 0);
+    procesarMensaje("0-admin-led-setTarget-0-1-255|", "Serial", 0);    
+    procesarMensaje("0-admin-led-setTarget-1-1-255|", "Serial", 0);
+    procesarMensaje("0-admin-led-setTarget-2-3-255-255-255|", "Serial", 0);
 
     
+	Serial.print("INICIADO (");
+    Serial.print(millis()/1000);
+    Serial.println(")");
 
+    pinMode(13, OUTPUT);
+    digitalWrite(13, LOW);
 
 }
 
