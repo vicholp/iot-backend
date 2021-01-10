@@ -1,0 +1,7 @@
+{
+  "cpu": {
+    "fqbn": "esp32:esp32:esp32doit-devkit-v1",
+    "name": "ESP32",
+    "port": "serial://COM4"
+  }
+}
